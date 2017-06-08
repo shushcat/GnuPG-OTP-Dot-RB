@@ -23,18 +23,15 @@ def print_help
   exit
 end
 
-if ARGV.length < 3 then
+begin
+  # Hidden recipients are assumed in determining slice length
+  private_key = (File.open(ARGV[1]).read
+                   .delete("\n")).slice(36..-35)
+  one_time_pad = (File.open(ARGV[2]).read
+                    .delete("\n")).slice(0..private_key.length)
+rescue
   print_help
 end
-
-command = ARGV[0]
-
-# Hidden recipients are assumed in determining slice length
-private_key = (File.open(ARGV[1]).read
-                .delete("\n")).slice(36..-35)
-one_time_pad = (File.open(ARGV[2]).read
-                  .delete("\n")).slice(0..private_key.length)
-
 
 def armored_string_to_int_ary (armored_string)
   int_ary = []
