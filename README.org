@@ -1,0 +1,10 @@
+#+TITLE: GnuPG OTP Dot RB
+
+Cutely rhythmic name aside, this script encrypts and decrypts private [[https://gnupg.org/][GnuPG]] keys using the [[https://en.wikipedia.org/wiki/One-time_pad][one-time pad]] (OTP) method.  An OTP is any string of text as long or longer than the secret to be encrypted.  In this case, a selected OTP (such as [[http://www.gutenberg.org/][a passage from a book]]) is used to apply a character-wise offset to a private key, producing a dummy key which is safe for remote backup.
+
+The dummy keys produced by encrypting private keys with this method resemble valid private keys since they both are encoded using the OpenPGP Message Format (see [[https://tools.ietf.org/html/rfc4880#section-6.3][section 6.3 of RFC 4880]]) and have GnuPG headers and footers.  Since each character in a dummy key is produced by offsetting the character at the same index of a private key by an amount equal to the value of the character at that location in the OTP, dummy keys produced in this fashion cannot be decrypted without learning the OTP used for encryption.  Restoring a lost private key nevertheless remains practical since decryption only requires that one recall the passage of text used as an OTP.
+
+* Usage
+
+- =gnupg-otp.rb encrypt <private key> <one time pad>= \to =<dummy key= :: Produce a dummy key from a private key and a one time pad.
+- =gnupg-otp.rb decrypt <dummy key> <one time pad>= \to =<private key>= :: Recover a private key from a dummy key and a one time pad.
