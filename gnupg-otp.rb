@@ -10,11 +10,8 @@ Mapping = ["A", "B", "C", "D", "E", "F", "G", "H", "I",
            "2", "3", "4", "5", "6", "7", "8", "9", "+",
            "/", "="]
 
-PublicHeader = "-----BEGIN PGP PUBLIC KEY BLOCK-----"
-PublicFooter = "-----END PGP PUBLIC KEY BLOCK-----"
-
-PrivateHeader = "-----BEGIN PGP PRIVATE KEY BLOCK-----"
-PrivateFooter = "-----END PGP PRIVATE KEY BLOCK-----"
+Header = "-----BEGIN PGP PRIVATE KEY BLOCK-----"
+Footer = "-----END PGP PRIVATE KEY BLOCK-----"
 
 def print_help
   puts "Create dummy keys for safe remote storage of private keys."
@@ -29,7 +26,7 @@ end
 begin
   # Hidden recipients are assumed in determining slice length
   private_key = (File.open(ARGV[1]).read
-                   .delete("\n")).slice(36..-35)
+                   .delete("\n")).slice(37..-36)
   one_time_pad = (File.open(ARGV[2]).read
                     .delete("\n")).slice(0..private_key.length)
 rescue
@@ -65,19 +62,19 @@ def decrypt_pad (key_ary, pad_ary)
 end
 
 if ARGV[0] == "encrypt" then
-  puts PublicHeader + "\n\n"
+  puts Header + "\n\n"
   puts int_ary_to_armored_string(
          encrypt_pad(armored_string_to_int_ary(private_key),
                  armored_string_to_int_ary(one_time_pad)))
          .scan(/.{64}|.+/).join("\n")
-  puts PublicFooter
+  puts Footer
 elsif ARGV[0] == "decrypt" then
-  puts PrivateHeader + "\n\n"
+  puts Header + "\n\n"
   puts int_ary_to_armored_string(
          decrypt_pad(armored_string_to_int_ary(private_key),
                  armored_string_to_int_ary(one_time_pad)))
          .scan(/.{64}|.+/).join("\n")
-  puts PrivateFooter
+  puts Footer
 else
   print_help
 end
