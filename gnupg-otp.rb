@@ -10,8 +10,11 @@ Mapping = ["A", "B", "C", "D", "E", "F", "G", "H", "I",
            "2", "3", "4", "5", "6", "7", "8", "9", "+",
            "/", "="]
 
-Header = "-----BEGIN PGP PUBLIC KEY BLOCK-----"
-Footer = "-----END PGP PUBLIC KEY BLOCK-----"
+PublicHeader = "-----BEGIN PGP PUBLIC KEY BLOCK-----"
+PublicFooter = "-----END PGP PUBLIC KEY BLOCK-----"
+
+PrivateHeader = "-----BEGIN PGP PRIVATE KEY BLOCK-----"
+PrivateFooter = "-----END PGP PRIVATE KEY BLOCK-----"
 
 def print_help
   puts "Create dummy keys for safe remote storage of private keys."
@@ -62,19 +65,19 @@ def decrypt_pad (key_ary, pad_ary)
 end
 
 if ARGV[0] == "encrypt" then
-  puts Header + "\n\n"
+  puts PublicHeader + "\n\n"
   puts int_ary_to_armored_string(
          encrypt_pad(armored_string_to_int_ary(private_key),
                  armored_string_to_int_ary(one_time_pad)))
          .scan(/.{64}|.+/).join("\n")
-  puts Footer
+  puts PublicFooter
 elsif ARGV[0] == "decrypt" then
-  puts Header + "\n\n"
+  puts PrivateHeader + "\n\n"
   puts int_ary_to_armored_string(
          decrypt_pad(armored_string_to_int_ary(private_key),
                  armored_string_to_int_ary(one_time_pad)))
          .scan(/.{64}|.+/).join("\n")
-  puts Footer
+  puts PrivateFooter
 else
   print_help
 end
